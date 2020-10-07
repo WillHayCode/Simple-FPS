@@ -1,0 +1,30 @@
+{
+  "name": "simple-fps",
+  "version": "0.0.1",
+  "description": "A Simple FPS",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && webpack build/Main.js -o dist/main.js --mode development",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WillHayCode/Simple-FPS.git"
+  },
+  "author": "William Hayward",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WillHayCode/Simple-FPS/issues"
+  },
+  "homepage": "https://github.com/WillHayCode/Simple-FPS#readme",
+  "devDependencies": {
+    "typescript": "3.8.3",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^4.1.0",
+    "lipwig": "^1.2.5",
+    "lipwigjs": "^1.2.6"
+  }
+}

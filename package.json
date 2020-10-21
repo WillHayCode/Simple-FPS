@@ -3,20 +3,22 @@
   "version": "0.0.1",
   "description": "A Simple FPS",
   "main": "index.js",
-  "watch" : {
+  "watch": {
     "build": {
-      "patterns": ["src"],
+      "patterns": [
+        "src"
+      ],
       "extensions": "ts"
     }
   },
   "scripts": {
     "build": "npm run clean && tsc && webpack && npm run copy && npm run serve",
-    "serve": "python3.7 -m http.server 8000 -d './dist/'", 
+    "serve": "python3.7 -m http.server 8000 -d './dist/'",
     "clean": "rm -rf dist",
     "copy": "npm run copy:html && npm run copy:models && npm run copy:textures",
     "copy:html": "cp assets/html/* dist/",
-    "copy:models": "cp -r assets/models/ dist/",
-    "copy:textures": "cp -r assets/textures/ dist/",
+    "copy:models": "cp -r assets/mesh/ dist/",
+    "copy:textures": "cp -r assets/texture/ dist/",
     "watch": "npm-watch build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -31,15 +33,15 @@
   },
   "homepage": "https://github.com/WillHayCode/Simple-FPS#readme",
   "devDependencies": {
+    "lipwig": "^1.2.5",
     "npm-watch": "^0.7.0",
-    "typescript": "3.8.3",
+    "typescript": "^4.0.3",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12",
-    "lipwig": "^1.2.5"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "babylonjs": "^4.1.0",
-    "babylonjs-loaders": "^4.1.0",
+    "babylonjs": "4.2.0-beta.11",
+    "babylonjs-loaders": "4.2.0-beta.11",
     "lipwigjs": "^1.2.6"
   }
 }

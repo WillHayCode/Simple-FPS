@@ -16,5 +16,13 @@
     "node_modules",
     "dist",
     "build"
+  ],
+  "lib": [
+    "es6"
+  ],
+  "types": [
+    "babylonjs",
+    "dom",
+    "es6"
   ]
 }

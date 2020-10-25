@@ -6,6 +6,9 @@ export class Actor {
   protected name: string;
   protected scene: Stage;
 
+  public node: BABYLON.TransformNode;
+  public headNode: BABYLON.TransformNode;
+
   protected root: BABYLON.Mesh;
   protected skin: BABYLON.Mesh;
 
@@ -15,37 +18,43 @@ export class Actor {
 
     this.root = this.scene.loader.EmptyMesh;
     this.skin = this.scene.loader.EmptyMesh;
+
+    this.node = new BABYLON.TransformNode('rootNode', scene);
+    this.headNode = new BABYLON.TransformNode('camNode', scene);
+    this.headNode.parent = this.node;
   }
 
   public set x(x: number) {
-    this.root.position.x = x;
-    this.skin.position.x = x;
+    this.node.position.x = x;
+    //this.root.position.x = x;
+    //this.skin.position.x = x;
   }
 
   public get x(): number {
-    return this.root.position.x;
+    return this.node.position.x;
   }
 
   public set y(y: number) {
-    this.root.position.y = y;
-    this.skin.position.y = y;
+    this.node.position.y = y;
+    //this.root.position.y = y;
+    //this.skin.position.y = y;
   }
 
   public get y(): number {
-    return this.root.position.y;
+    return this.node.position.y;
   }
 
   public set z(z: number) {
-    this.root.position.z = z;
-    this.skin.position.z = z;
+    this.node.position.z = z;
+    //this.root.position.z = z;
+    //this.skin.position.z = z;
   }
 
   public get z(): number {
-    return this.root.position.z;
+    return this.node.position.z;
   }
 
   public tick(delta: number) {
-
   }
 
   public setMesh(type: string, mesh: string): Promise<Mesh> {
@@ -74,6 +83,16 @@ export class Actor {
           this.skin.hasVertexAlpha = false;
           this.skin.material = skinOld.material;
           this.skin.position.set(skinOld.position.x, skinOld.position.y, skinOld.position.z);
+          root.parent = this.node;
+          if (skin.skeleton) {
+            const headBoneIndex = skin.skeleton.getBoneIndexByName('Head');
+            if (headBoneIndex >= 0) {
+              const headBone = skin.skeleton.bones[headBoneIndex];
+              const headPos = headBone.getAbsolutePosition();
+              this.headNode.position.set(headPos.x, headPos.y, headPos.z);
+              console.log('Head node', headPos, skin.skeleton);
+            }
+          }
           resolve(skin);
         });
       });

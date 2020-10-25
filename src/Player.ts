@@ -1,44 +1,40 @@
 import * as BABYLON from 'babylonjs';
 import { Loader } from './Loader';
-import { Mesh } from './Asset';
 import { Actor } from './Actor';
 import { Stage } from './Stage';
 import { Camera } from './Camera';
 
 export class Player extends Actor {
   private meshName = 'medium';
-  private speed = 3.0;
-  private head: BABYLON.Nullable<BABYLON.Bone> = null;
+  private speed = 5.0;
+  private runSpeed = 7.0;
   public camera: BABYLON.Nullable<Camera> = null;
+
+  private sensitivity = 0.1;
 
   constructor(name: string, scene: Stage) {
 
     super(name, scene);
 
-    this.setMesh('character', this.meshName).then((skin: Mesh) => {
-      console.log('loaded ' + name);
-      if (name == 'player' && skin.skeleton) {
-        console.log('Player head status:');
-        const headIndex = skin.skeleton.getBoneIndexByName('Head');
-        if (headIndex >= 0) {
-          console.log('Has head');
-          this.head = skin.skeleton.bones[headIndex];
-          const engine = scene.getEngine();
-          const x = this.head.position.x;
-          const y = this.head.position.y;
-          const z = this.head.position.z;
-          //this.camera = camera;
-        }
+    this.setMesh('character', this.meshName);
+
+    window.addEventListener('keydown', (evt: KeyboardEvent) => {
+      if (evt.key == 'q') {
+        console.log(this.node.rotation.y, this.headNode.rotation.y);
       }
     });
-;
     this.setSkin();
   }
 
   public tick(delta: number) {
     super.tick(delta);
     if (this.name == 'player') {
-      const calculatedSpeed = this.speed * delta;
+      let calculatedSpeed = delta;
+      if (this.scene.input.key['shift'].pressed) {
+        calculatedSpeed *= this.runSpeed;
+      } else {
+        calculatedSpeed *= this.speed;
+      }
 
       const forwardKey = this.scene.input.key['w'];
       const backwardKey = this.scene.input.key['s'];
@@ -51,26 +47,33 @@ export class Player extends Actor {
       const zSpeed = zAxis * calculatedSpeed;
       const xSpeed = xAxis * calculatedSpeed;
 
-      this.z = this.z + zSpeed;
-      this.x = this.x + xSpeed;
-
       if (this.camera != null) {
-        if (this.head != null) {
-          const tfHead = this.head.getTransformNode();
-          if (tfHead) {
-            /*this.camera.mo
-            this.camera.position.x = tfHead.position.x;
-            this.camera.position.y = tfHead.position.y;
-            this.camera.position.z = tfHead.position.z;*/
-           //this.camera.parent = tfHead;
-            if (this.scene.input.mouse.justMoved) {
-              const deltaX = this.scene.input.mouse.deltaX;
-              const deltaY = this.scene.input.mouse.deltaY;
-              //this.camera.absoluteRotation
-            }
-          }
+        if (this.scene.input.mouse.justMoved) {
+          const deltaX = this.scene.input.mouse.deltaX;
+          const deltaY = this.scene.input.mouse.deltaY;
+
+          // Note: X and Y have to swap from mouse to axis
+          this.headNode.rotation.x += deltaY * delta * this.sensitivity; //TODO: Cap these values
+          this.node.rotation.y += deltaX * delta * this.sensitivity; // Change root node 
         }
       }
+
+      let rotation = this.node.rotation.y;
+
+      let zMove = zSpeed * Math.cos(rotation);
+      let xMove = zSpeed * Math.sin(rotation);
+      this.z = this.z + zMove;
+      this.x = this.x + xMove; 
+
+      rotation += Math.PI / 2; // Turn to right
+      
+      zMove = xSpeed * Math.cos(rotation);
+      xMove = xSpeed * Math.sin(rotation);
+      this.z = this.z + zMove;
+      this.x = this.x + xMove;
+
+    } else {
+      //this.node.rotation.y += delta * 1;
     }
   }
 

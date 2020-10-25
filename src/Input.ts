@@ -13,7 +13,8 @@ export class Input {
 
     // Init Keys
     this.key = {};
-    const keys = 'abcdefghijklmnopqrstuvwxyz'; // Keys to track
+    const keys = 'abcdefghijklmnopqrstuvwxyz'.split(''); // Keys to track
+    keys.push('shift');
     //TODO: Change this to array (explode), add array for shift/ctrl/etc
     //TODO: Make keys only track when registered or requested for the first time?
     //TODO: Would need to move to to getter function for above

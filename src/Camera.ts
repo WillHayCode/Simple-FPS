@@ -8,7 +8,7 @@ export class Camera extends BABYLON.UniversalCamera {
     //this.fov = 2 * Math.PI; //One day...
     const engine = scene.getEngine();
     if (engine) {
-      this.attachControl(engine.getRenderingCanvas() as HTMLCanvasElement, false);
+      //this.attachControl(engine.getRenderingCanvas() as HTMLCanvasElement, false);
     }
   }
 

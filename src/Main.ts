@@ -14,6 +14,14 @@ class Main {
     this.scene = new Stage(this.engine);
     this.scene.actionManager = new BABYLON.ActionManager(this.scene);
 
+
+    canvas.addEventListener('click', () => {
+
+      canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+      if (canvas.requestPointerLock) {
+          canvas.requestPointerLock();
+      }
+    });
     this.createScene();
     this.startRender();
   }
@@ -21,13 +29,15 @@ class Main {
   private async createScene() {
     //TODO: For split screen later https://doc.babylonjs.com/how_to/how_to_use_multi-views
     let camera = new Camera('camera', new BABYLON.Vector3(0, 0, 0), this.scene);
-    camera.inertia = 0;
+    //camera.setTarget(BABYLON.Vector3.Zero());
 
     new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0,1,0), this.scene);
 
 
     const player = new Player('player', this.scene);
     this.scene.add(player);
+    //camera.parent = player.node;
+    camera.parent = player.headNode;
     const other = new Player('other', this.scene);
     other.z = 5;
     this.scene.add(other);
@@ -53,6 +63,7 @@ class Main {
         }
       }
     }, 10);
+
 
     this.scene.registerBeforeRender(() => {
       this.scene.tick();

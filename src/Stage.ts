@@ -25,6 +25,7 @@ export class Stage extends BABYLON.Scene {
     if (this.lastTick == 0) {
       this.lastTick = Date.now();
     }
+
     const newTick = Date.now();
     let delta = newTick - this.lastTick;
     delta /= 1000;
@@ -49,4 +50,11 @@ export class Stage extends BABYLON.Scene {
   public add(actor: Actor) {
     this.actors.push(actor);
   }
+
+  public start() {
+    this.registerBeforeRender(() => {
+      this.tick();
+    });
+  }
+
 }

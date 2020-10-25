@@ -42,37 +42,23 @@ class Main {
     other.z = 5;
     this.scene.add(other);
 
-    //TODO: Set timeout
-    setTimeout(() => {
-      const skel = player?.skeleton;
-      //alert('a');
-      if (skel) {
-      //alert('b');
-        player.camera = camera;
-        const index = skel.getBoneIndexByName('Head');
-        const head = skel.bones[index];
-        const headNode = head.getTransformNode();
-        if (headNode) {
-          //const headPos = headNode.position.clone();
-          const headPos = new BABYLON.Vector3(3, 3, 3);
-          const camNode = new BABYLON.TransformNode('camnode', this.scene);
-          //camNode.setParent
-          camNode.position = headPos;
-          //camera.parent = camNode;
-          //alert('Set');
-        }
-      }
-    }, 10);
+    const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, this.scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", this.scene);
+    const extensions = ['_px.png', '_py.png', '_pz.png', '_nx.png', '_ny.png', '_nz.png']
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("texture/sky/sky", this.scene, extensions);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
 
 
-    this.scene.registerBeforeRender(() => {
-      this.scene.tick();
-    });
 
-
+    this.scene.start();
   }
 
   private startRender() {
+    //TODO: Move to stage?
     var renderer = this.scene.enableDepthRenderer();
     this.engine.runRenderLoop(() => {
       this.scene.render();
@@ -82,11 +68,6 @@ class Main {
       this.engine.resize();
     });
   }
-
-  private tick(delta: number) {
-
-  }
-
 }
 
 window.addEventListener('DOMContentLoaded', () => {

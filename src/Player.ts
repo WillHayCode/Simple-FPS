@@ -41,34 +41,32 @@ export class Player extends Actor {
       const leftKey = this.scene.input.key['a'];
       const rightKey = this.scene.input.key['d'];
 
-      const zAxis = forwardKey.value - backwardKey.value;
-      const xAxis = rightKey.value - leftKey.value;
+      const fAxis = forwardKey.value - backwardKey.value;
+      const sAxis = rightKey.value - leftKey.value;
 
-      const zSpeed = zAxis * calculatedSpeed;
-      const xSpeed = xAxis * calculatedSpeed;
+      const fSpeed = fAxis * calculatedSpeed;
+      const sSpeed = sAxis * calculatedSpeed;
 
-      if (this.camera != null) {
-        if (this.scene.input.mouse.justMoved) {
-          const deltaX = this.scene.input.mouse.deltaX;
-          const deltaY = this.scene.input.mouse.deltaY;
+      if (this.scene.input.mouse.justMoved) {
+        const deltaX = this.scene.input.mouse.deltaX;
+        const deltaY = this.scene.input.mouse.deltaY;
 
-          // Note: X and Y have to swap from mouse to axis
-          this.headNode.rotation.x += deltaY * delta * this.sensitivity; //TODO: Cap these values
-          this.node.rotation.y += deltaX * delta * this.sensitivity; // Change root node 
-        }
+        // Note: X and Y have to swap from mouse to axis
+        this.headNode.rotation.x += deltaY * delta * this.sensitivity; //TODO: Cap these values
+        this.node.rotation.y += deltaX * delta * this.sensitivity; // Change root node 
       }
 
       let rotation = this.node.rotation.y;
 
-      let zMove = zSpeed * Math.cos(rotation);
-      let xMove = zSpeed * Math.sin(rotation);
+      let zMove = fSpeed * Math.cos(rotation);
+      let xMove = fSpeed * Math.sin(rotation);
       this.z = this.z + zMove;
       this.x = this.x + xMove; 
 
       rotation += Math.PI / 2; // Turn to right
       
-      zMove = xSpeed * Math.cos(rotation);
-      xMove = xSpeed * Math.sin(rotation);
+      zMove = sSpeed * Math.cos(rotation);
+      xMove = sSpeed * Math.sin(rotation);
       this.z = this.z + zMove;
       this.x = this.x + xMove;
 
@@ -107,4 +105,5 @@ export class Player extends Actor {
   public get skeleton(): BABYLON.Nullable<BABYLON.Skeleton> {
     return this.skin.skeleton;
   }
+
 }

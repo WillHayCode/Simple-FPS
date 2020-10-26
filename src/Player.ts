@@ -85,6 +85,7 @@ export class Player extends Actor {
         if (rotQuat) {
           const rotEuler = rotQuat.toEulerAngles();
           rotEuler.y += yRotate;
+          this.headNode.rotation.y += yRotate;
           this.root.rotationQuaternion = rotEuler.toQuaternion();
 
           //this.root.rotationQuaternion.x += yRotate;
@@ -106,7 +107,19 @@ export class Player extends Actor {
         moveVector.z += zMove;
         moveVector.x += xMove;
 
-        this.root.position.subtractInPlace(moveVector); // Subtract because quaternions
+        const position = this.root.position;
+        position.subtractInPlace(moveVector); // Subtract because quaternions
+        this.headNode.position = position.clone();
+        const skel = this.skin.skeleton;
+        if (skel) {
+          const headBoneIndex = skel.getBoneIndexByName('Head');
+          if (headBoneIndex >= 0) {
+            console.log('HEADNODE');
+            const headBone = skel.bones[headBoneIndex];
+            const headPos = headBone.getAbsolutePosition();
+            this.headNode.position.y += headPos.y;
+          }
+        }
 
       }
 

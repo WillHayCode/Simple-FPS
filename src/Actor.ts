@@ -55,16 +55,6 @@ export class Actor {
   }
 
   public tick(delta: number) {
-    const skel = this.skin.skeleton;
-    if (skel) {
-      const headBoneIndex = skel.getBoneIndexByName('Head');
-      if (headBoneIndex >= 0) {
-        console.log('HEADNODE');
-        const headBone = skel.bones[headBoneIndex];
-        const headPos = headBone.getAbsolutePosition();
-        this.headNode.position.set(headPos.x, headPos.y, headPos.z);
-      }
-    }
   }
 
   public setMesh(type: string, mesh: string): Promise<Mesh> {

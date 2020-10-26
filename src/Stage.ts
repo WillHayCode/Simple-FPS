@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import * as CANNON from 'cannon';
 import { Actor } from './Actor';
 import { Loader } from './Loader';
 import { Input } from './Input';
@@ -7,6 +8,8 @@ import { Input } from './Input';
 export class Stage extends BABYLON.Scene {
   public loader: Loader;
   public input: Input;
+  public renderer: BABYLON.Nullable<BABYLON.DepthRenderer> = null;
+
   private actors: Actor[]; 
 
   private lastTick: number;
@@ -18,6 +21,9 @@ export class Stage extends BABYLON.Scene {
     this.input = new Input(this);
     this.actors = [];
     this.lastTick = 0;
+
+    window.CANNON = CANNON;
+    this.enablePhysics();
   }
 
   public tick() {
@@ -55,6 +61,20 @@ export class Stage extends BABYLON.Scene {
     this.registerBeforeRender(() => {
       this.tick();
     });
+  }
+
+  public enablePhysics(gravity?: BABYLON.Nullable<BABYLON.Vector3>, plugin?: BABYLON.IPhysicsEnginePlugin): boolean {
+    const gravityVector = new BABYLON.Vector3(0,-9.81, 0);
+    const physicsPlugin = new BABYLON.CannonJSPlugin();
+
+    return super.enablePhysics(gravityVector, physicsPlugin);
+  }
+
+  public enableDepthRenderer(camera?: BABYLON.Nullable<BABYLON.Camera>, storeNonLinearDepth?: boolean, force32bitsFloat?: boolean): BABYLON.DepthRenderer {
+    if (!this.renderer) {
+      this.renderer = super.enableDepthRenderer(camera, storeNonLinearDepth, force32bitsFloat);
+    }
+    return this.renderer;
   }
 
 }

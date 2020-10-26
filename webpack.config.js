@@ -7,7 +7,7 @@ const config = {
       filename: 'main.js',
       path: __dirname + '/dist'
     },
-    mode: 'development'
+    mode: 'development',
 }
 
 module.exports = config;
